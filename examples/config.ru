@@ -37,7 +37,7 @@ run lambda { |env|
     token = Rack::Protection::AuthenticityToken.token(env.fetch("rack.session"))
     [200, headers, [<<~HTML]]
       <!doctype html><html lang="en"><meta charset="utf-8"><title>OmniAuth Whop demo</title>
-      <h1>OmniAuth Whop sandbox demo</h1>
+      <h1>OmniAuth Whop demo</h1>
       <form method="post" action="/auth/whop">
         <input type="hidden" name="authenticity_token" value="#{CGI.escapeHTML(token)}">
         <button type="submit">Sign in with Whop</button>

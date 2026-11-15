@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler"
+require "fileutils"
+require "tmpdir"
+require "rubygems/package"
+
+root = File.expand_path("..", __dir__)
+rails_version = ENV.fetch("RAILS_VERSION", "~> 8.0.0")
+devise_version = ENV.fetch("DEVISE_VERSION", "~> 5.0")
+artifact = ENV.fetch("GEM_ARTIFACT", nil)
+FileUtils.mkdir_p(File.join(root, "pkg"))
+artifact ||= File.join(root, "pkg", "integration.gem")
+if !ENV.fetch("GEM_ARTIFACT", nil) && !system("gem", "build", File.join(root, "omniauth-whop.gemspec"), "--output", artifact)
+  abort "Gem build failed"
+end
+
+Dir.mktmpdir("omniauth-whop-rails-") do |tmp|
+  package = Gem::Package.new(File.expand_path(artifact))
+  package_dir = File.join(tmp, "package")
+  package.extract_files(package_dir)
+  File.write(File.join(package_dir, "omniauth-whop.gemspec"), package.spec.to_ruby)
+  gemfile = <<~GEMFILE
+    source "https://rubygems.org"
+    gem "rails", #{rails_version.inspect}
+    gem "devise", #{devise_version.inspect}
+    gem "omniauth-whop", path: #{package_dir.inspect}
+    gem "omniauth-rails_csrf_protection", "~> 1.0"
+    gem "sqlite3", ">= 1.7"
+    gem "json", "~> 2.0"
+    gem "propshaft", "~> 1.0"
+    gem "rack-test", "~> 2.2"
+    gem "webmock", "~> 3.0"
+  GEMFILE
+  File.write(File.join(tmp, "Gemfile"), gemfile)
+  Bundler.with_unbundled_env do
+    run = lambda do |*command, dir: tmp, env: {}|
+      abort "Failed: #{command.join(' ')}" unless system(env, *command, chdir: dir)
+    end
+    run.call("bundle", "install", "--quiet")
+    run.call("bundle", "exec", "rails", "new", "app", "--minimal", "--skip-bundle", "--skip-git", "--quiet")
+    app_dir = File.join(tmp, "app")
+    # Devise 4's mailer must have Action Mailer available when CI eager-loads the app.
+    application = File.join(app_dir, "config/application.rb")
+    File.write(application, File.read(application).sub('# require "action_mailer/railtie"', 'require "action_mailer/railtie"'))
+    File.write(File.join(app_dir, "Gemfile"), gemfile)
+    FileUtils.cp(File.join(tmp, "Gemfile.lock"), File.join(app_dir, "Gemfile.lock"))
+    FileUtils.cp_r("#{root}/spec/integration/app/.", app_dir)
+    %w[rails devise].each do |mode|
+      run.call("bundle", "exec", "ruby", "script/verify.rb", dir: app_dir,
+                                                             env: { "RAILS_ENV" => "test", "WHOP_INTEGRATION_MODE" => mode })
+    end
+  end
+end

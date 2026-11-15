@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+eval_gemfile "../Gemfile"
+gem "jwt", "2.9.0"
+gem "omniauth", "2.3.1"
+gem "omniauth-oauth2", "1.10.1"

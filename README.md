@@ -14,7 +14,7 @@ A community-maintained [OmniAuth](https://github.com/omniauth/omniauth) strategy
 
 Requires Ruby 3.2+ and OmniAuth 2 (via `omniauth-oauth2`).
 
-Verified with a real Whop sandbox login on November 15, 2026: authorization, code exchange, signature/claim validation, and UserInfo profile mapping. Production credentials have not been exercised.
+Verified with real Whop sandbox and production logins on November 15, 2026: authorization, code exchange, signature/claim validation, and UserInfo profile mapping. Fresh Rails applications also exercise both standalone OmniAuth and Devise integration in CI.
 
 ## Installation
 
@@ -141,10 +141,15 @@ Open `http://localhost:9292` and click **Sign in with Whop**. The demo displays 
 bundle install
 bundle exec rake
 bundle exec rubocop
+bundle exec ruby bin/test_rails
 gem build omniauth-whop.gemspec
 ```
 
-Tests exercise the real OmniAuth middleware and HTTP boundary with generated signing keys and stubbed Whop responses. External HTTP is disabled in the test suite. CI runs Ruby 3.2, 3.3, 3.4, and 4.0.
+Tests exercise the real OmniAuth middleware and HTTP boundary with generated signing keys and stubbed Whop responses. External HTTP is disabled in the test suite. CI runs Ruby 3.2, 3.3, 3.4, and 4.0, plus the minimum supported JWT/OmniAuth dependencies. The Rails integration matrix covers Rails 7.2/Devise 4.9, Rails 8.0/Devise 5, and Rails 8.1/Devise 5.
+
+`bin/test_rails` builds and installs the packaged gem into a temporary fresh Rails application. It checks POST initiation with a real Rails CSRF token, signed callbacks, persisted sessions, callback replay, and missing CSRF tokens in both standalone and Devise configurations. Set `RAILS_VERSION` and `DEVISE_VERSION` to select another supported combination; set `GEM_ARTIFACT` to test a previously built `.gem`. Whop HTTP responses are stubbed, so this command does not need credentials.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and the Trusted Publishing release process.
 
 Report bugs with a minimal reproduction, Ruby/gem versions, and the failure type. Do not include credentials, authorization codes, or customer data. To report a security issue privately, use [GitHub's security advisory form](https://github.com/yshmarov/omniauth-whop/security/advisories/new).
 

@@ -220,4 +220,93 @@ RSpec.describe OmniAuth::Strategies::Whop do
       expect(start_login["scope"]).to eq("openid profile")
     end
   end
+  it "accepts a rotated signing key on the next login" do
+    first = start_login
+    stub_oauth(first)
+    expect(callback(first)[0]).to eq(200)
+    second = start_login
+    replacement = OpenSSL::PKey::EC.generate("prime256v1")
+    replacement_jwk = JWT::JWK.new(replacement)
+    token = JWT.encode(claims(second), replacement, "ES256", kid: replacement_jwk.kid)
+    stub_oauth(second, id_token: token)
+    stub_request(:get, "#{base_url}/.well-known/jwks.json").to_return(
+      headers: { "Content-Type" => "application/json" }, body: JSON.generate(keys: [replacement_jwk.export])
+    )
+    expect(callback(second)[0]).to eq(200)
+    expect(a_request(:get, "#{base_url}/.well-known/jwks.json")).to have_been_made.twice
+  end
+
+  it "rejects a signing key ID that the provider does not advertise" do
+    login = start_login
+    stub_oauth(login, id_token: JWT.encode(claims(login), key, "ES256", kid: "unknown-key"))
+    expect(callback(login)[0]).to eq(401)
+    expect(@profile_request).not_to have_been_requested
+  end
+
+  it "rejects an unsigned identity token" do
+    login = start_login
+    stub_oauth(login, id_token: JWT.encode(claims(login), nil, "none"))
+    expect(callback(login)[0]).to eq(401)
+    expect(@profile_request).not_to have_been_requested
+  end
+
+  it "rejects a callback after the session nonce is lost" do
+    login = start_login
+    session.delete("omniauth.whop.nonces")
+    stub_oauth(login)
+    expect(callback(login)[0]).to eq(401)
+    expect(@profile_request).not_to have_been_requested
+  end
+
+  it "allows a valid authorized party with multiple audiences" do
+    login = start_login
+    stub_oauth(login, overrides: { "aud" => [client_id, "another-app"], "azp" => client_id })
+    expect(callback(login)[0]).to eq(200)
+  end
+
+  %w[/.well-known/jwks.json /oauth/userinfo].each do |path|
+    [401, 500].each do |status|
+      it "handles #{path} returning HTTP #{status}" do
+        login = start_login
+        stub_oauth(login)
+        stub_request(:get, "#{base_url}#{path}").to_return(status: status, body: "provider unavailable")
+        expect(callback(login)[0]).to eq(401)
+        expect(@auth).to be_nil
+      end
+    end
+
+    it "handles #{path} timing out" do
+      login = start_login
+      stub_oauth(login)
+      stub_request(:get, "#{base_url}#{path}").to_timeout
+      expect(callback(login)[0]).to eq(401)
+      expect(@auth).to be_nil
+    end
+
+    it "handles malformed JSON from #{path}" do
+      login = start_login
+      stub_oauth(login)
+      stub_request(:get, "#{base_url}#{path}").to_return(
+        headers: { "Content-Type" => "application/json" }, body: "{"
+      )
+      expect(callback(login)[0]).to eq(401)
+      expect(@auth).to be_nil
+    end
+  end
+
+  it "rejects a UserInfo response with no subject" do
+    login = start_login
+    profile.delete("sub")
+    stub_oauth(login)
+    expect(callback(login)[0]).to eq(401)
+    expect(@auth).to be_nil
+  end
+
+  it "uses the configured callback path without incoming query parameters" do
+    custom = described_class.new(app, client_id, client_secret, callback_path: "/custom/whop/callback")
+    token = Rack::Protection::AuthenticityToken.token(session)
+    response = custom.call(env_for("/auth/whop?campaign=example", method: "POST", params: { authenticity_token: token }))
+    params = URI.decode_www_form(URI(response[1].fetch("location")).query).to_h
+    expect(params["redirect_uri"]).to eq("http://example.org/custom/whop/callback")
+  end
 end
