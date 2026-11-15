@@ -41,7 +41,11 @@ run lambda { |env|
       <form method="post" action="/auth/whop">
         <input type="hidden" name="authenticity_token" value="#{CGI.escapeHTML(token)}">
         <button type="submit">Sign in with Whop</button>
-      </form></html>
+      </form>
+      <p>New to Whop? <a href="https://whop.com/start/?code=CAKARK" rel="sponsored nofollow">Create a production Whop account</a>.
+      Referral link: Yaroslav Shmarov may earn a commission if you sign up through it.</p>
+      <p>This signup link is for production. Use a separate sandbox account when testing sandbox login.</p>
+      </html>
     HTML
   else
     [404, headers, ["Not found"]]
