@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "dotenv", "~> 3.0"
-gem "puma", "~> 7.2", ">= 7.2.1"
+gem "puma", "~> 8.0"
 gem "rack-session", "~> 2.1"
 gem "rackup", "~> 2.2"
 gem "rake", "~> 13.0"
