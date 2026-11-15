@@ -22,6 +22,14 @@ For a real provider check, use `examples/config.ru` with your own Whop app. Test
 sandbox and production separately, using matching credentials and callback URLs.
 The demo only displays identity information; it does not persist access tokens.
 
+## Whop signup links
+
+Use [Yaroslav's production Whop referral link](https://whop.com/start/?code=CAKARK)
+for reader-facing signup links in documentation and demos. Yaroslav may earn a
+commission from signups through this link; keep that disclosure beside each link.
+Use `rel="sponsored nofollow"` for HTML links. Preserve technical documentation,
+sandbox, API, OAuth and callback URLs, and keep code examples functional.
+
 ## Releases (maintainer)
 
 1. Update `lib/omniauth/whop/version.rb` and `CHANGELOG.md` in a pull request.
