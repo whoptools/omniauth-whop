@@ -14,6 +14,8 @@ A community-maintained [OmniAuth](https://github.com/omniauth/omniauth) strategy
 
 Requires Ruby 3.2+ and OmniAuth 2 (via `omniauth-oauth2`).
 
+Verified with a real Whop sandbox login on November 15, 2026: authorization, code exchange, signature/claim validation, and UserInfo profile mapping. Production credentials have not been exercised.
+
 ## Installation
 
 ```ruby
@@ -35,7 +37,7 @@ Then run `bundle install`.
    - Devise: `http://localhost:3000/users/auth/whop/callback`
    - Included Rack demo: `http://localhost:9292/auth/whop/callback`
 4. Save the app's client ID and client secret as `WHOP_CLIENT_ID` and `WHOP_CLIENT_SECRET`.
-5. If using a legacy app API key as the client secret, enable its `oauth:token_exchange` permission as described in [Whop's authentication guide](https://whop.com/blog/add-user-authentication/).
+5. Under **Permissions**, add `oauth:token_exchange`, enter a short explanation, and save. This app API key permission enables the client secret to exchange authorization codes. It is separate from the user-facing `openid profile email` OAuth scopes. See [Whop's authentication guide](https://whop.com/blog/add-user-authentication/).
 
 Use credentials from the same environment as the strategy. Register an HTTPS callback for production and omit `sandbox: true`.
 
