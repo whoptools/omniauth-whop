@@ -1,0 +1,19 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  Exclude:
+    - vendor/**/*
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/Documentation:
+  Enabled: false
+Metrics:
+  Enabled: false
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: Gemfile
+
+Naming/FileName:
+  Exclude:
+    - lib/omniauth-whop.rb
+Layout/LineLength:
+  Max: 140
