@@ -9,3 +9,5 @@
 *.gem
 *.bak
 .DS_Store
+
+/gemfiles/*.lock
