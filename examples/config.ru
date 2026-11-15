@@ -42,9 +42,8 @@ run lambda { |env|
         <input type="hidden" name="authenticity_token" value="#{CGI.escapeHTML(token)}">
         <button type="submit">Sign in with Whop</button>
       </form>
-      <p>New to Whop? <a href="https://whop.com/start/?code=CAKARK" rel="sponsored nofollow">Create a production Whop account</a>.
-      Referral link: Yaroslav Shmarov may earn a commission if you sign up through it.</p>
-      <p>This signup link is for production. Use a separate sandbox account when testing sandbox login.</p>
+      <p><a href="https://whop.com/start/?code=CAKARK" rel="sponsored nofollow">Create a Whop business account</a>.
+      <small>I may earn a commission.</small></p>
       </html>
     HTML
   else
