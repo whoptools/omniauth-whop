@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-11-15
 
 - Add fresh Rails/Devise integration checks and minimum-dependency CI.
 - Cover signing-key rotation, callback paths, and provider failure responses.
