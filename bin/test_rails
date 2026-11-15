@@ -41,6 +41,9 @@ Dir.mktmpdir("omniauth-whop-rails-") do |tmp|
     run.call("bundle", "install", "--quiet")
     run.call("bundle", "exec", "rails", "new", "app", "--minimal", "--skip-bundle", "--skip-git", "--quiet")
     app_dir = File.join(tmp, "app")
+    # Devise 4's mailer must have Action Mailer available when CI eager-loads the app.
+    application = File.join(app_dir, "config/application.rb")
+    File.write(application, File.read(application).sub('# require "action_mailer/railtie"', 'require "action_mailer/railtie"'))
     File.write(File.join(app_dir, "Gemfile"), gemfile)
     FileUtils.cp(File.join(tmp, "Gemfile.lock"), File.join(app_dir, "Gemfile.lock"))
     FileUtils.cp_r("#{root}/spec/integration/app/.", app_dir)
