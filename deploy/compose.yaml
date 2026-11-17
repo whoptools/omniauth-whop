@@ -1,0 +1,26 @@
+name: omniauth-whop
+services:
+  app:
+    image: omniauth-whop:${APP_IMAGE_TAG:?Set APP_IMAGE_TAG to the deployed commit}
+    container_name: omniauth-whop-app
+    restart: unless-stopped
+    init: true
+    env_file: /opt/omniauth-whop/shared/runtime.env
+    mem_limit: 256m
+    cpus: 0.25
+    networks: [kamal]
+    healthcheck:
+      test: ["CMD", "ruby", "-rnet/http", "-e", "exit(Net::HTTP.get_response(URI('http://127.0.0.1:9292/health')).code == '200' ? 0 : 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+networks:
+  kamal:
+    external: true
+    name: kamal

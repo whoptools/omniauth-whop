@@ -60,3 +60,20 @@ jobs:
         env:
           RAILS_VERSION: ${{ matrix.rails }}
           DEVISE_VERSION: ${{ matrix.devise }}
+
+  demo-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - run: docker build -f deploy/Dockerfile -t omniauth-whop:test .
+      - name: Verify hosted demo
+        run: |
+          docker run -d --name omniauth-demo -p 127.0.0.1:9292:9292 \
+            -e PUBLIC_URL=https://omniauth.whoptools.com \
+            -e WHOP_CLIENT_ID=app_ci -e WHOP_CLIENT_SECRET=ci-placeholder \
+            -e WHOP_SANDBOX=false -e SESSION_SECRET="$(openssl rand -hex 64)" omniauth-whop:test
+          for attempt in 1 2 3 4 5; do
+            if curl --fail http://127.0.0.1:9292/health; then break; fi
+            sleep 2
+          done
+          python3 deploy/verify.py

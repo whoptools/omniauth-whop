@@ -11,3 +11,8 @@
 .DS_Store
 
 /gemfiles/*.lock
+/node_modules/
+/examples/public/theme.css
+/examples/public/fonts/
+/examples/public/licenses/
+/tmp/

@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["yshmarov@gmail.com"]
   spec.summary = "Sign in with Whop for OmniAuth"
   spec.description = "A community OmniAuth strategy for Whop with PKCE, verified OpenID Connect ID tokens, and sandbox support."
-  spec.homepage = "https://github.com/yshmarov/omniauth-whop"
+  spec.homepage = "https://github.com/whoptools/omniauth-whop"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2"
   spec.files = Dir["lib/**/*.rb", "README.md", "LICENSE", "CHANGELOG.md"]
