@@ -76,7 +76,7 @@ module WhopDemo
         #{content}
         <footer><nav aria-label="Resources"><a href="https://github.com/whoptools/omniauth-whop">Source &amp; setup</a>
         <a href="https://rubygems.org/gems/omniauth-whop">RubyGems</a><a href="https://whoptools.com">More tools</a></nav>
-        <p><a href="https://whop.com/start/?code=CAKARK" rel="sponsored nofollow">Start selling with Whop ↗</a><br><small>I may earn a commission.</small></p>
+        <p><a href="https://whop.com/start/?code=CAKARK" rel="sponsored nofollow">Create a Whop account</a></p>
         </footer></main></body></html>
       HTML
     end

@@ -6,7 +6,7 @@ Add **Sign in with Whop** to a Ruby or Rails app.
 
 A community-maintained [OmniAuth](https://github.com/omniauth/omniauth) strategy by [Yaroslav Shmarov](https://github.com/yshmarov). Not an official Whop integration or endorsed by Whop. For payments, see [pay-whop](https://github.com/whoptools/pay-whop).
 
-[Get started with Whop](https://whop.com/start/?code=CAKARK). *I may earn a commission.*
+[Create a Whop account](https://whop.com/start/?code=CAKARK).
 
 - Authorization code flow with S256 PKCE and state validation.
 - Fresh nonce for each login; concurrent sign-ins supported.
