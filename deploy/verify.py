@@ -5,7 +5,7 @@ import urllib.parse
 
 connection = http.client.HTTPConnection('127.0.0.1', 9292, timeout=10)
 def request(method, path, body=None, headers=None):
-    connection.request(method, path, body, headers or {})
+    connection.request(method, path, body, {'X-Forwarded-Proto': 'https', **(headers or {})})
     response = connection.getresponse()
     return response.status, dict(response.getheaders()), response.read().decode(errors='replace')
 
