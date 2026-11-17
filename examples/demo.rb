@@ -72,12 +72,11 @@ module WhopDemo
       <<~HTML
         <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
         <title>#{CGI.escapeHTML(title)}</title><link rel="stylesheet" href="/assets/app.css"></head><body><main>
-        <header class="topbar"><a class="brand" href="https://whoptools.com">WhopTools</a><span class="product">OmniAuth Whop</span></header>
+        <header class="topbar"><a class="brand" href="https://whoptools.com">WhopTools</a><span class="product">OmniAuth Whop</span><a class="button primary signup" href="https://whop.com/start/?code=CAKARK" rel="sponsored nofollow">Create a Whop account</a></header>
         #{content}
         <footer><nav aria-label="Resources"><a href="https://github.com/whoptools/omniauth-whop">Source &amp; setup</a>
         <a href="https://rubygems.org/gems/omniauth-whop">RubyGems</a><a href="https://whoptools.com">More tools</a></nav>
-        <p><a href="https://whop.com/start/?code=CAKARK" rel="sponsored nofollow">Create a Whop account</a></p>
-        </footer></main></body></html>
+                </footer></main></body></html>
       HTML
     end
 
