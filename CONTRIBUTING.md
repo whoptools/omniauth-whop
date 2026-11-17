@@ -25,9 +25,9 @@ The demo only displays identity information; it does not persist access tokens.
 ## Whop signup links
 
 Use [Yaroslav's production Whop referral link](https://whop.com/start/?code=CAKARK)
-for reader-facing signup links. Keep any disclosure brief: "I may earn a commission."
-Use one nearby note per page, not one for every repeated link. Avoid adding signup
-promotions to technical guides. Use `rel="sponsored nofollow"` for HTML links.
+with the label “Create a Whop account” for reader-facing signup links.
+Keep the CTA concise, without appended affiliate or commission commentary.
+Avoid adding signup promotions to technical guides. Use `rel="sponsored nofollow"` for HTML links.
 Preserve technical documentation, sandbox, API, OAuth and callback URLs, and keep
 code examples functional.
 
