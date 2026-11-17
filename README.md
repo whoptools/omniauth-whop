@@ -165,3 +165,5 @@ Report bugs with a minimal reproduction, Ruby/gem versions, and the failure type
 ## License
 
 [MIT](LICENSE)
+
+The demo follows the system light/dark preference automatically, including changes while open, with no manual switch or saved override. Its header includes the WhopTools signup referral link on signed-in, signed-out and error pages.
