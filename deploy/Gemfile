@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gem "dotenv", "~> 3.0"
+gem "omniauth-whop", path: ".."
+gem "puma", "~> 7.2", ">= 7.2.1"
+gem "rack-session", "~> 2.1"
+gem "rackup", "~> 2.2"

@@ -1,10 +1,10 @@
 # OmniAuth Whop
 
-[![CI](https://github.com/yshmarov/omniauth-whop/actions/workflows/ci.yml/badge.svg)](https://github.com/yshmarov/omniauth-whop/actions/workflows/ci.yml)
+[![CI](https://github.com/whoptools/omniauth-whop/actions/workflows/ci.yml/badge.svg)](https://github.com/whoptools/omniauth-whop/actions/workflows/ci.yml)
 
 Add **Sign in with Whop** to a Ruby or Rails app.
 
-A community-maintained [OmniAuth](https://github.com/omniauth/omniauth) strategy by [Yaroslav Shmarov](https://github.com/yshmarov). Not an official Whop integration or endorsed by Whop. For payments, see [pay-whop](https://github.com/yshmarov/pay-whop).
+A community-maintained [OmniAuth](https://github.com/omniauth/omniauth) strategy by [Yaroslav Shmarov](https://github.com/yshmarov). Not an official Whop integration or endorsed by Whop. For payments, see [pay-whop](https://github.com/whoptools/pay-whop).
 
 [Get started with Whop](https://whop.com/start/?code=CAKARK). *I may earn a commission.*
 
@@ -124,18 +124,25 @@ Tokens are credentials. Keep them out of logs and browser responses; encrypt the
 
 Leave PKCE and state validation enabled. The strategy fetches signing keys from the configured environment for each login, avoiding stale-key failures after rotation. Identity comes from a verified ID token plus the authenticated UserInfo endpoint; it never trusts a decoded, unverified JWT.
 
+## Try the demo
+
+[Sign in with Whop](https://omniauth.whoptools.com) on the hosted demo. It uses production Whop login and runs on our existing Hetzner server. See the [deployment runbook](docs/hetzner.md).
+
 ## Run the sandbox demo
 
 ```sh
-git clone https://github.com/yshmarov/omniauth-whop.git
+git clone https://github.com/whoptools/omniauth-whop.git
 cd omniauth-whop
 bundle install
+npm ci && npm run build
 cp .env.example .env
 # Set the sandbox client ID and secret in .env.
 bundle exec rackup examples/config.ru --host localhost --port 9292
 ```
 
-Open `http://localhost:9292` and click **Sign in with Whop**. The demo displays the provider, user ID, and profile after a successful callback. It does not display or save access/refresh tokens. Its generated session secret changes on restart; set `SESSION_SECRET` to a random value of at least 64 bytes for a stable local session.
+Open `http://localhost:9292` and click **Sign in with Whop**. The demo displays the verified user ID and profile, with CSRF-protected sign-out. It does not display or save access/refresh tokens. Its encrypted session lasts one hour; set `SESSION_SECRET` to a random value of at least 64 bytes to preserve sessions across restarts. Production requires a stable secret and an HTTPS `PUBLIC_URL`.
+
+The interface follows the [WhopTools style guide](https://github.com/whoptools/whoptools.com/blob/main/STYLE_GUIDE.md): official Frosted UI colors, self-hosted Inter, and automatic system themes with no theme picker.
 
 ## Development
 
@@ -153,7 +160,7 @@ Tests exercise the real OmniAuth middleware and HTTP boundary with generated sig
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and the Trusted Publishing release process.
 
-Report bugs with a minimal reproduction, Ruby/gem versions, and the failure type. Do not include credentials, authorization codes, or customer data. To report a security issue privately, use [GitHub's security advisory form](https://github.com/yshmarov/omniauth-whop/security/advisories/new).
+Report bugs with a minimal reproduction, Ruby/gem versions, and the failure type. Do not include credentials, authorization codes, or customer data. To report a security issue privately, use [GitHub's security advisory form](https://github.com/whoptools/omniauth-whop/security/advisories/new).
 
 ## License
 

@@ -1,0 +1,14 @@
+.git
+.env*
+.bundle
+vendor
+node_modules
+tmp
+pkg
+coverage
+*.gem
+**/.env*
+**/*.bak
+examples/public/fonts
+examples/public/licenses
+examples/public/theme.css
