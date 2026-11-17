@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
-# Operator-run deployment of an explicitly reviewed repository revision.
+# Called by the restricted GitHub Actions SSH account.
 set -euo pipefail
-revision=${1:-}
-if [[ ! $revision =~ ^[0-9a-f]{40}$ ]]; then
-  echo 'Usage: hetzner.sh <40-character reviewed commit SHA>' >&2
+if [[ $# != 1 || ${1:-} != deploy\ * ]] || [[ ! ${1#deploy } =~ ^[0-9a-f]{40}$ ]]; then
+  echo 'Expected: deploy <40-character commit SHA>' >&2
   exit 64
 fi
+revision=${1#deploy }
 base=/opt/omniauth-whop
-install -d -m 700 "$base/shared"
-exec 9>"$base/shared/deploy.lock"
-flock -w 900 9
+repository=https://github.com/whoptools/omniauth-whop.git
+# Share the build/activation lock with Pay and Webflow on this server.
+exec 9>/opt/pay-whop/shared/deploy.lock
+flock -w 1800 9
+latest=$(git ls-remote "$repository" refs/heads/main | cut -f1)
+if [[ $revision != "$latest" ]]; then
+  echo 'Skipping a superseded main revision.'
+  exit 0
+fi
 test -s "$base/shared/runtime.env"
 release="$base/releases/$revision"
 previous=$(readlink -f "$base/current" || true)
@@ -44,6 +50,12 @@ fi
 docker buildx build --builder omniauth-whop-builder --load \
   -t "omniauth-whop:$revision" -f "$release/deploy/Dockerfile" "$release"
 docker buildx stop omniauth-whop-builder
+# Do not activate a stale run if main changed while its image built.
+latest=$(git ls-remote "$repository" refs/heads/main | cut -f1)
+if [[ $revision != "$latest" ]]; then
+  echo 'Skipping activation of a superseded main revision.'
+  exit 0
+fi
 replacing=true
 activate "$release"
 curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 \

@@ -29,16 +29,24 @@ Register `https://omniauth.whoptools.com/auth/whop/callback` in the existing pro
 
 The demo retains only selected profile fields in an encrypted, HttpOnly, Secure, SameSite=Lax cookie for one hour. It does not store access/refresh tokens or use a database. Sign-out clears the demo session; it does not sign the visitor out of Whop. Preserve `SESSION_SECRET` across deployments. Rotating it signs demo visitors out.
 
-## Deploy and rollback
+## Automatic deployments
 
-CI builds the production image and checks the HTTP/authentication boundary. Deployment is operator-run; opening or merging a PR does not automatically deploy it. The initial hosting request permits deploying the reviewed PR revision before merge; PR merges still require the owner's explicit instruction.
+Every push or merge to `main` runs the complete CI matrix. Only a successful matrix starts **Deploy to Hetzner**. Pull requests run tests without receiving deployment credentials. The first automatic rollout is verified after merging PR #4.
 
-After tests and local visual review, push the revision and run on the server:
+Repository secrets `HETZNER_DEPLOY_KEY` and `HETZNER_KNOWN_HOSTS` hold a dedicated SSH key and the pinned server host key. The `omniauth-whop-deploy` Unix account uses a forced command, no interactive shell or forwarding, and one allowed sudo entry: the root-owned `/usr/local/sbin/omniauth-whop-deploy` script. Application secrets remain on the server.
+
+The installed script accepts only `deploy <40-character commit SHA>` for current `main`, checks again after building, and skips superseded runs. Deployments share the server lock used by Pay and Webflow. GitHub also serializes this repository's deployment jobs. Build and activation use the existing resource limits; failed upgrades restore the previous release when available. Container replacement can briefly interrupt requests.
+
+Retry a failed rollout through GitHub Actions after checking its error. To deploy the current, CI-verified main revision manually:
 
 ```sh
-bash /path/to/reviewed/deploy/hetzner.sh <40-character-commit-SHA>
+ssh root@188.245.75.73 "/usr/local/sbin/omniauth-whop-deploy 'deploy <40-character SHA>'"
 ```
 
-The script downloads that exact revision, uses a dedicated resource-limited builder, activates the container, verifies HTTPS health, and advances `current`. Failed upgrades restore the previous release when one exists. It does not restart Pay, Webflow, Corsego, or the shared proxy. Container replacement can briefly interrupt requests. To roll back, run the same command with the previous reviewed commit.
+Changes to `deploy/hetzner.sh` require an operator to install the reviewed script at `/usr/local/sbin/omniauth-whop-deploy` (root-owned, mode 0755). The restricted CI account cannot update this script or rotate its key.
+
+## Rollback
+
+The automatic command deliberately rejects older revisions. An operator can restore a retained release by using its `.env` and `deploy/compose.yaml` with `docker compose up -d --no-build --wait app`, refreshing the `whoptools-omniauth` Kamal Proxy target, verifying HTTPS health, and restoring the `current` symlink. Coordinate this under the same shared deployment lock. Preserve the runtime environment and session secret.
 
 Do not commit secrets or copy `.env` files into a Docker build. The application has no persistent database to back up; retain the server environment file securely.

@@ -77,3 +77,47 @@ jobs:
             sleep 2
           done
           python3 deploy/verify.py
+
+  deployment-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - run: bash -n deploy/hetzner.sh && python3 deploy/test_deployment.py
+
+  deploy:
+    name: Deploy to Hetzner
+    needs: [test, minimum-dependencies, rails-integration, demo-container, deployment-test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    concurrency:
+      group: hetzner-production
+      cancel-in-progress: false
+    steps:
+      - name: Configure deployment SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.HETZNER_DEPLOY_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.HETZNER_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519 ~/.ssh/known_hosts
+      - name: Deploy tested main revision
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          ssh -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
+            omniauth-whop-deploy@188.245.75.73 "deploy $DEPLOY_SHA"
+      - name: Check public health
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-all-errors \
+            --retry-delay 3 https://omniauth.whoptools.com/health > /dev/null
+          curl --fail --silent --show-error https://pay.whoptools.com/up > /dev/null
+          curl --fail --silent --show-error https://wf-checkout.whoptools.com/health > /dev/null
+      - name: Remove deployment credentials
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519
