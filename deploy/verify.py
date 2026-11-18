@@ -25,7 +25,8 @@ location = next(value for key, value in headers.items() if key.lower() == 'locat
 params = urllib.parse.parse_qs(urllib.parse.urlparse(location).query)
 assert params['redirect_uri'] == ['https://omniauth.whoptools.com/auth/whop/callback']
 assert params['code_challenge_method'] == ['S256']
-assert request('GET', '/assets/theme.css')[0] == 200
-assert request('GET', '/assets/fonts/inter-latin.woff2')[0] == 200
+assert request('GET', '/assets/whoptools/whoptools.css')[0] == 200
+assert request('GET', '/assets/whoptools/inter-latin-wght-normal.woff2')[0] == 200
+assert request('GET', '/assets/app.css')[0] == 200
 assert request('GET', '/.env')[0] == 404
 print('Demo health, assets, secure session, CSRF, PKCE and canonical callback passed.')

@@ -59,4 +59,13 @@ RSpec.describe WhopDemo::App do
     expect(body.join).to include("Back to sign in")
     expect(body.join).not_to include("sensitive-provider-detail")
   end
+
+  it "uses the shared WhopTools header, product navigation and footer" do
+    body = request("/")[2].join
+    expect(body).to include('<body class="wt-body">', '<header class="wt-header">', '<footer class="wt-footer">')
+    expect(body).to include('<a href="https://omniauth.whoptools.com/" aria-current="page">')
+    expect(body).to include('href="https://wf-checkout.whoptools.com/"', 'href="https://pay.whoptools.com/"')
+    expect(body).to include('class="wt-button wt-button--solid" href="https://whop.com/start/?code=CAKARK" ' \
+                            'rel="sponsored">Create a Whop account<')
+  end
 end

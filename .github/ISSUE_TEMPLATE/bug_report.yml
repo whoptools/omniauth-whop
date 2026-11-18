@@ -1,0 +1,30 @@
+name: Bug report
+description: Report unexpected sign-in or strategy behavior.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For exploitable vulnerabilities, use [private security reporting](https://github.com/whoptools/omniauth-whop/security/advisories/new).
+        Use synthetic data. Do not include client secrets, authorization codes, access/ID tokens or real user profiles.
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions and environment
+      description: omniauth-whop, Ruby, Rails/Devise (if used), OmniAuth versions, and sandbox or production Whop.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Steps or a small example that shows the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: Include redacted error messages or HTTP status codes when available.
+    validations:
+      required: true

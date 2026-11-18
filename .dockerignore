@@ -9,6 +9,3 @@ coverage
 *.gem
 **/.env*
 **/*.bak
-examples/public/fonts
-examples/public/licenses
-examples/public/theme.css
