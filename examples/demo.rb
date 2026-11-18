@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "cgi"
+require "digest"
 require "rack"
 require "rack/protection"
 
@@ -30,6 +31,12 @@ module WhopDemo
     KIT = File.expand_path("public/whoptools", __dir__)
     HEADER = File.read(File.join(KIT, "header.html")).strip
     FOOTER = File.read(File.join(KIT, "footer.html")).strip
+    # Versioned URLs stop browsers pairing new markup with a cached old stylesheet.
+    ASSET = lambda do |path|
+      "/assets/#{path}?v=#{Digest::SHA256.file(File.expand_path("public/#{path}", __dir__)).hexdigest[0, 10]}"
+    end
+    KIT_CSS = ASSET.call("whoptools/whoptools.css")
+    APP_CSS = ASSET.call("app.css")
     NOT_FOUND = <<~HTML
       <div class="wt-hero"><h1 class="wt-title">Page not found</h1>
       <div class="wt-actions"><a class="wt-button wt-button--surface" href="/">Go home</a></div></div>
@@ -77,7 +84,7 @@ module WhopDemo
       <<~HTML
         <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="color-scheme" content="light dark"><title>#{CGI.escapeHTML(title)}</title>
-        <link rel="stylesheet" href="/assets/whoptools/whoptools.css"><link rel="stylesheet" href="/assets/app.css"></head>
+        <link rel="stylesheet" href="#{KIT_CSS}"><link rel="stylesheet" href="#{APP_CSS}"></head>
         <body class="wt-body"><a class="wt-skip" href="#main">Skip to content</a>#{HEADER}
         <main id="main" class="wt-main"><div class="wt-container">#{content}</div></main>
         #{FOOTER}</body></html>
@@ -101,7 +108,7 @@ module WhopDemo
       <<~HTML
         <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop · Authentication for Ruby &amp; Rails</p>
         <h1 class="wt-title">Sign in with Whop.</h1><p class="wt-lead">Try a real Whop login, then add it to your Ruby or Rails app with OmniAuth.</p>
-        <div class="wt-actions">#{form('/auth/whop', 'Sign in with Whop', token)}<a class="wt-button wt-button--surface" href="https://github.com/whoptools/omniauth-whop#installation">Installation guide</a></div></div>
+        <div class="wt-actions">#{form('/auth/whop', 'Sign in with Whop', token)}<a class="wt-button wt-button--surface" href="https://github.com/whoptools/omniauth-whop#installation">Add omniauth-whop to your app</a></div></div>
         <section class="wt-section"><h2>One sign-in. Your verified profile.</h2><ol class="steps"><li>Sign in securely on Whop.</li>
         <li>Return here to see your verified account details.</li><li>Sign out to clear this demo’s session.</li></ol></section>
         <section class="wt-section"><h2>Start with one gem</h2><code class="wt-snippet">gem "omniauth-whop"</code>
