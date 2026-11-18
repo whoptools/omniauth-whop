@@ -19,8 +19,11 @@ if production
 
   OmniAuth.config.full_host = url.to_s.delete_suffix("/")
 end
+# Retired hostnames (comma-separated) redirect to PUBLIC_URL; health checks stay in place.
+legacy_hosts = ENV.fetch("LEGACY_HOSTS", "").split(",").map(&:strip).reject(&:empty?)
 
 use WhopDemo::Headers
+use WhopDemo::LegacyHostRedirect, hosts: legacy_hosts, origin: OmniAuth.config.full_host if production && legacy_hosts.any?
 map "/assets" do
   run Rack::Files.new(File.expand_path("public", __dir__))
 end

@@ -36,7 +36,7 @@ else
   printf '%s\\trefs/heads/main\\n' "$TEST_SHA"
 fi
 ''')
-        self.command('curl', 'if [[ ${FAIL_HEALTH:-} == yes && $* == *https://omniauth.whoptools.com/health* ]]; then exit 42; fi')
+        self.command('curl', 'if [[ ${FAIL_HEALTH:-} == yes && $* == *https://omniauth-ruby.whoptools.com/health* ]]; then exit 42; fi')
         self.command('tar', '''
 while [[ $# -gt 0 ]]; do
   if [[ $1 == -C ]]; then destination=$2; break; fi

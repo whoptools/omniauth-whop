@@ -25,7 +25,8 @@ activate() {
   local directory=$1
   docker compose --project-name omniauth-whop --env-file "$directory/.env" -f "$directory/deploy/compose.yaml" up -d --no-build --wait --wait-timeout 120 app
   docker exec kamal-proxy kamal-proxy deploy whoptools-omniauth \
-    --target omniauth-whop-app:9292 --host omniauth.whoptools.com --tls --health-check-path /health
+    --target omniauth-whop-app:9292 --host omniauth-ruby.whoptools.com --host omniauth.whoptools.com \
+    --tls --health-check-path /health
 }
 cleanup() {
   local result=$?
@@ -59,7 +60,7 @@ fi
 replacing=true
 activate "$release"
 curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 \
-  --resolve omniauth.whoptools.com:443:127.0.0.1 https://omniauth.whoptools.com/health >/dev/null
+  --resolve omniauth-ruby.whoptools.com:443:127.0.0.1 https://omniauth-ruby.whoptools.com/health >/dev/null
 ln -sfn "$release" "$base/current"
 activated=true
-printf 'Deployed %s to https://omniauth.whoptools.com/\n' "$revision"
+printf 'Deployed %s to https://omniauth-ruby.whoptools.com/\n' "$revision"

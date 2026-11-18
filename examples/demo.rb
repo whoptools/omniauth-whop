@@ -26,6 +26,24 @@ module WhopDemo
     end
   end
 
+  # Permanently redirects browser requests on retired hostnames to the canonical origin.
+  class LegacyHostRedirect
+    def initialize(app, hosts:, origin:)
+      @app = app
+      @hosts = hosts
+      @origin = origin
+    end
+
+    def call(env)
+      request = Rack::Request.new(env)
+      if @hosts.include?(request.host) && (request.get? || request.head?) && request.path != "/health"
+        return [301, { "location" => "#{@origin}#{request.fullpath}", "cache-control" => "no-store" }, []]
+      end
+
+      @app.call(env)
+    end
+  end
+
   class App
     # Shared WhopTools navigation, vendored from whoptools/whoptools.com.
     KIT = File.expand_path("public/whoptools", __dir__)

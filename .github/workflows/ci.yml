@@ -69,7 +69,7 @@ jobs:
       - name: Verify hosted demo
         run: |
           docker run -d --name omniauth-demo -p 127.0.0.1:9292:9292 \
-            -e PUBLIC_URL=https://omniauth.whoptools.com \
+            -e PUBLIC_URL=https://omniauth-ruby.whoptools.com \
             -e WHOP_CLIENT_ID=app_ci -e WHOP_CLIENT_SECRET=ci-placeholder \
             -e WHOP_SANDBOX=false -e SESSION_SECRET="$(openssl rand -hex 64)" omniauth-whop:test
           for attempt in 1 2 3 4 5; do

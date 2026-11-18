@@ -23,7 +23,7 @@ status, headers, _ = request('POST', '/auth/whop', urllib.parse.urlencode({'auth
 assert status == 302
 location = next(value for key, value in headers.items() if key.lower() == 'location')
 params = urllib.parse.parse_qs(urllib.parse.urlparse(location).query)
-assert params['redirect_uri'] == ['https://omniauth.whoptools.com/auth/whop/callback']
+assert params['redirect_uri'] == ['https://omniauth-ruby.whoptools.com/auth/whop/callback']
 assert params['code_challenge_method'] == ['S256']
 assert request('GET', '/assets/whoptools/whoptools.css')[0] == 200
 assert request('GET', '/assets/whoptools/inter-latin-wght-normal.woff2')[0] == 200

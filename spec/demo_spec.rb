@@ -69,4 +69,14 @@ RSpec.describe WhopDemo::App do
     expect(body).to include('class="wt-button wt-button--solid" href="https://whop.com/start/?code=CAKARK" ' \
                             'rel="sponsored">Create a Whop account<')
   end
+
+  it "redirects browser requests on retired hostnames but keeps health checks in place" do
+    redirect = WhopDemo::LegacyHostRedirect.new(->(_env) { [200, {}, ["ok"]] },
+                                                hosts: ["omniauth.whoptools.com"], origin: "https://omniauth-ruby.whoptools.com")
+    status, headers, = redirect.call(Rack::MockRequest.env_for("https://omniauth.whoptools.com/?a=1"))
+    expect(status).to eq(301)
+    expect(headers.fetch("location")).to eq("https://omniauth-ruby.whoptools.com/?a=1")
+    expect(redirect.call(Rack::MockRequest.env_for("https://omniauth.whoptools.com/health")).first).to eq(200)
+    expect(redirect.call(Rack::MockRequest.env_for("https://omniauth-ruby.whoptools.com/")).first).to eq(200)
+  end
 end
