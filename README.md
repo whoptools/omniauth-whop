@@ -1,12 +1,17 @@
 # OmniAuth Whop
 
-[![CI](https://github.com/whoptools/omniauth-whop/actions/workflows/ci.yml/badge.svg)](https://github.com/whoptools/omniauth-whop/actions/workflows/ci.yml)
+[![CI](https://github.com/whoptools/omniauth-whop/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/whoptools/omniauth-whop/actions/workflows/ci.yml)
+[![Gem version](https://img.shields.io/gem/v/omniauth-whop?label=gem)](https://rubygems.org/gems/omniauth-whop)
+[![Gem downloads](https://img.shields.io/gem/dt/omniauth-whop?label=downloads)](https://rubygems.org/gems/omniauth-whop)
+[![Ruby 3.2+](https://img.shields.io/badge/Ruby-3.2%2B-CC342D)](omniauth-whop.gemspec)
+[![MIT license](https://img.shields.io/github/license/whoptools/omniauth-whop)](LICENSE)
+[![Live demo](https://img.shields.io/badge/live_demo-omniauth.whoptools.com-fa4616)](https://omniauth.whoptools.com/)
 
 Add **Sign in with Whop** to a Ruby or Rails app.
 
 A community-maintained [OmniAuth](https://github.com/omniauth/omniauth) strategy by [Yaroslav Shmarov](https://github.com/yshmarov). Not an official Whop integration or endorsed by Whop. For payments, see [pay-whop](https://github.com/whoptools/pay-whop).
 
-[Create a Whop account](https://whop.com/start/?code=CAKARK).
+<a href="https://whop.com/start/?code=CAKARK" rel="sponsored"><img src=".github/create-whop-account.svg" alt="Create a Whop account" height="40"></a>
 
 - Authorization code flow with S256 PKCE and state validation.
 - Fresh nonce for each login; concurrent sign-ins supported.
@@ -134,7 +139,6 @@ Leave PKCE and state validation enabled. The strategy fetches signing keys from 
 git clone https://github.com/whoptools/omniauth-whop.git
 cd omniauth-whop
 bundle install
-npm ci && npm run build
 cp .env.example .env
 # Set the sandbox client ID and secret in .env.
 bundle exec rackup examples/config.ru --host localhost --port 9292
@@ -142,7 +146,7 @@ bundle exec rackup examples/config.ru --host localhost --port 9292
 
 Open `http://localhost:9292` and click **Sign in with Whop**. The demo displays the verified user ID and profile, with CSRF-protected sign-out. It does not display or save access/refresh tokens. Its encrypted session lasts one hour; set `SESSION_SECRET` to a random value of at least 64 bytes to preserve sessions across restarts. Production requires a stable secret and an HTTPS `PUBLIC_URL`.
 
-The interface follows the [WhopTools style guide](https://github.com/whoptools/whoptools.com/blob/main/STYLE_GUIDE.md): official Frosted UI colors, self-hosted Inter, and automatic system themes with no theme picker.
+The interface uses the shared WhopTools kit in `examples/public/whoptools/` (Frosted UI colors, Inter, shared header and footer), vendored from [whoptools.com](https://github.com/whoptools/whoptools.com). It follows the system light/dark theme automatically.
 
 ## Development
 
@@ -166,4 +170,12 @@ Report bugs with a minimal reproduction, Ruby/gem versions, and the failure type
 
 [MIT](LICENSE)
 
-The demo follows the system light/dark preference automatically, including changes while open, with no manual switch or saved override. Its header includes the WhopTools signup referral link on signed-in, signed-out and error pages.
+## Part of WhopTools
+
+Open-source Whop integrations that share one design and one home at [whoptools.com](https://whoptools.com):
+
+| Project | Live demo | Source |
+| --- | --- | --- |
+| Whop Checkout for Webflow | [wf-checkout.whoptools.com](https://wf-checkout.whoptools.com/) | [webflow-whop](https://github.com/whoptools/webflow-whop) |
+| OmniAuth Whop | [omniauth.whoptools.com](https://omniauth.whoptools.com/) | [omniauth-whop](https://github.com/whoptools/omniauth-whop) |
+| Pay Whop | [pay.whoptools.com](https://pay.whoptools.com/) | [pay-whop](https://github.com/whoptools/pay-whop) |
