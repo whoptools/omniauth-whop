@@ -5,7 +5,7 @@
 [![Gem downloads](https://img.shields.io/gem/dt/omniauth-whop?label=downloads)](https://rubygems.org/gems/omniauth-whop)
 [![Ruby 3.2+](https://img.shields.io/badge/Ruby-3.2%2B-CC342D)](omniauth-whop.gemspec)
 [![MIT license](https://img.shields.io/github/license/whoptools/omniauth-whop)](LICENSE)
-[![Live demo](https://img.shields.io/badge/live_demo-omniauth.whoptools.com-fa4616)](https://omniauth.whoptools.com/)
+[![Live demo](https://img.shields.io/badge/live_demo-omniauth--ruby.whoptools.com-fa4616)](https://omniauth-ruby.whoptools.com/)
 
 Add **Sign in with Whop** to a Ruby or Rails app.
 
@@ -131,7 +131,7 @@ Leave PKCE and state validation enabled. The strategy fetches signing keys from 
 
 ## Try the demo
 
-[Sign in with Whop](https://omniauth.whoptools.com) on the hosted demo. It uses production Whop login and runs on our existing Hetzner server. See the [deployment runbook](docs/hetzner.md).
+[Sign in with Whop](https://omniauth-ruby.whoptools.com) on the hosted demo. It uses production Whop login and runs on our existing Hetzner server. See the [deployment runbook](docs/hetzner.md).
 
 ## Run the sandbox demo
 
@@ -176,6 +176,6 @@ Open-source Whop integrations. More at [whoptools.com](https://whoptools.com).
 
 | Project | Live demo | Source |
 | --- | --- | --- |
-| Whop Checkout for Webflow | [wf-checkout.whoptools.com](https://wf-checkout.whoptools.com/) | [webflow-whop](https://github.com/whoptools/webflow-whop) |
-| OmniAuth Whop | [omniauth.whoptools.com](https://omniauth.whoptools.com/) | [omniauth-whop](https://github.com/whoptools/omniauth-whop) |
+| Whop Checkout for Webflow | [webflow-checkout.whoptools.com](https://webflow-checkout.whoptools.com/) | [webflow-whop](https://github.com/whoptools/webflow-whop) |
+| OmniAuth Whop | [omniauth-ruby.whoptools.com](https://omniauth-ruby.whoptools.com/) | [omniauth-whop](https://github.com/whoptools/omniauth-whop) |
 | Pay Whop | [pay-rails.whoptools.com](https://pay-rails.whoptools.com/) | [pay-whop](https://github.com/whoptools/pay-whop) |

@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/whoptools/omniauth-whop/security/advisories/new
     about: Report exploitable vulnerabilities privately.
   - name: Live demo
-    url: https://omniauth.whoptools.com/
+    url: https://omniauth-ruby.whoptools.com/
     about: Try the hosted demo before reporting.

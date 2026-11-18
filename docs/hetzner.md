@@ -1,6 +1,6 @@
 # OmniAuth Whop demo on Hetzner
 
-The Rack demo runs at **https://omniauth.whoptools.com** on the existing Corsego server (`188.245.75.73`), alongside Pay and Webflow. It uses Whop's production OAuth environment. No new server is required.
+The Rack demo runs at **https://omniauth-ruby.whoptools.com** on the existing Corsego server (`188.245.75.73`), alongside Pay and Webflow. It uses Whop's production OAuth environment. No new server is required.
 
 ## Interface
 
@@ -12,20 +12,21 @@ The server-rendered interface uses pinned `@frosted-ui/colors` and self-hosted I
 - Limits: 256 MB memory, 0.25 CPU, bounded logs, automatic restart and health checks.
 - Releases: `/opt/omniauth-whop/releases/<commit>`; `current` points to the active release.
 - Secrets: `/opt/omniauth-whop/shared/runtime.env`, root-owned mode 0600, outside all build contexts.
-- HTTPS: existing Kamal Proxy; DNS A record `omniauth` points to `188.245.75.73`.
+- HTTPS: existing Kamal Proxy; DNS A records `omniauth-ruby` (canonical) and `omniauth` (legacy, redirects) point to `188.245.75.73`.
 
 Required runtime variables:
 
 ```dotenv
 RACK_ENV=production
-PUBLIC_URL=https://omniauth.whoptools.com
+PUBLIC_URL=https://omniauth-ruby.whoptools.com
+LEGACY_HOSTS=omniauth.whoptools.com
 WHOP_SANDBOX=false
 WHOP_CLIENT_ID=app_example
 WHOP_CLIENT_SECRET=replace-on-server
 SESSION_SECRET=replace-with-at-least-64-random-bytes
 ```
 
-Register `https://omniauth.whoptools.com/auth/whop/callback` in the existing production Whop OAuth app, retaining local callbacks. The canonical origin is fixed by `PUBLIC_URL`; inbound host headers do not choose the OAuth callback destination.
+Register `https://omniauth-ruby.whoptools.com/auth/whop/callback` in the existing production Whop OAuth app, retaining local callbacks. The previous `https://omniauth.whoptools.com/auth/whop/callback` stays registered until the November 18, 2026 cutover has been stable for a week. Browser requests to the legacy host get a 301 to `PUBLIC_URL`; `/health` is served in place. The canonical origin is fixed by `PUBLIC_URL`; inbound host headers do not choose the OAuth callback destination.
 
 The demo retains only selected profile fields in an encrypted, HttpOnly, Secure, SameSite=Lax cookie for one hour. It does not store access/refresh tokens or use a database. Sign-out clears the demo session; it does not sign the visitor out of Whop. Preserve `SESSION_SECRET` across deployments. Rotating it signs demo visitors out.
 

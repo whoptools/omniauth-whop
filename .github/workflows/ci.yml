@@ -115,9 +115,9 @@ jobs:
       - name: Check public health
         run: |
           curl --fail --silent --show-error --retry 5 --retry-all-errors \
-            --retry-delay 3 https://omniauth.whoptools.com/health > /dev/null
+            --retry-delay 3 https://omniauth-ruby.whoptools.com/health > /dev/null
           curl --fail --silent --show-error https://pay-rails.whoptools.com/up > /dev/null
-          curl --fail --silent --show-error https://wf-checkout.whoptools.com/health > /dev/null
+          curl --fail --silent --show-error https://webflow-checkout.whoptools.com/health > /dev/null
       - name: Remove deployment credentials
         if: always()
         run: rm -f ~/.ssh/id_ed25519

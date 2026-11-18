@@ -4,7 +4,7 @@ Report suspected vulnerabilities privately through [GitHub private vulnerability
 
 ## Supported versions
 
-Fixes target the latest release on [RubyGems](https://rubygems.org/gems/omniauth-whop) and the `main` branch, which also runs the hosted demo at `omniauth.whoptools.com`.
+Fixes target the latest release on [RubyGems](https://rubygems.org/gems/omniauth-whop) and the `main` branch, which also runs the hosted demo at `omniauth-ruby.whoptools.com`.
 
 ## What to include
 

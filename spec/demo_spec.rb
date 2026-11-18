@@ -63,8 +63,8 @@ RSpec.describe WhopDemo::App do
   it "uses the shared WhopTools header, product navigation and footer" do
     body = request("/")[2].join
     expect(body).to include('<body class="wt-body">', '<header class="wt-header">', '<footer class="wt-footer">')
-    expect(body).to include('<a href="https://omniauth.whoptools.com/" aria-current="page">')
-    expect(body).to include('href="https://wf-checkout.whoptools.com/"', 'href="https://pay-rails.whoptools.com/"')
+    expect(body).to include('<a href="https://omniauth-ruby.whoptools.com/" aria-current="page">')
+    expect(body).to include('href="https://webflow-checkout.whoptools.com/"', 'href="https://pay-rails.whoptools.com/"')
     expect(body).to include('href="https://x.com/yarotheslav" rel="author"', 'href="/assets/whoptools/whoptools.css?v=')
     expect(body).to include('href="https://github.com/whoptools/omniauth-whop"><svg class="wt-github"')
     expect(body).not_to match(%r{github\.com/whoptools/omniauth-whop#})
