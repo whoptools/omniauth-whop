@@ -49,6 +49,8 @@ module WhopDemo
     KIT = File.expand_path("public/whoptools", __dir__)
     HEADER = File.read(File.join(KIT, "header.html")).strip
     FOOTER = File.read(File.join(KIT, "footer.html")).strip
+    SOURCE_BUTTON = '<a class="wt-button wt-button--surface" href="https://github.com/whoptools/omniauth-whop">' \
+                    "#{File.read(File.join(KIT, 'github.svg')).strip}Source code</a>".freeze
     # Versioned URLs stop browsers pairing new markup with a cached old stylesheet.
     ASSET = lambda do |path|
       "/assets/#{path}?v=#{Digest::SHA256.file(File.expand_path("public/#{path}", __dir__)).hexdigest[0, 10]}"
@@ -56,14 +58,14 @@ module WhopDemo
     KIT_CSS = ASSET.call("whoptools/whoptools.css")
     APP_CSS = ASSET.call("app.css")
     NOT_FOUND = <<~HTML
-      <div class="wt-hero"><h1 class="wt-title">Page not found</h1>
+      <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop · Ruby</p><h1 class="wt-title">Page not found.</h1>
       <div class="wt-actions"><a class="wt-button wt-button--surface" href="/">Go home</a></div></div>
     HTML
 
     def self.failure(_env)
       response(401, layout("Sign-in couldn’t be completed", <<~HTML))
-        <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop</p><h1 class="wt-title">Let’s try that again.</h1>
-        <p class="wt-lead">Your sign-in was canceled or couldn’t be verified.</p>
+        <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop · Ruby</p><h1 class="wt-title">Sign-in didn’t finish.</h1>
+        <p class="wt-lead">Canceled or not verified. Try again.</p>
         <div class="wt-actions"><a class="wt-button wt-button--surface" href="/">Back to sign in</a></div></div>
       HTML
     end
@@ -124,13 +126,11 @@ module WhopDemo
 
     def signed_out(token)
       <<~HTML
-        <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop · Authentication for Ruby &amp; Rails</p>
-        <h1 class="wt-title">Sign in with Whop.</h1><p class="wt-lead">Try a real Whop login, then add it to your Ruby or Rails app with OmniAuth.</p>
-        <div class="wt-actions">#{form('/auth/whop', 'Sign in with Whop', token)}<a class="wt-button wt-button--surface" href="https://github.com/whoptools/omniauth-whop#installation">Add omniauth-whop to your app</a></div></div>
-        <section class="wt-section"><h2>One sign-in. Your verified profile.</h2><ol class="steps"><li>Sign in securely on Whop.</li>
-        <li>Return here to see your verified account details.</li><li>Sign out to clear this demo’s session.</li></ol></section>
-        <section class="wt-section"><h2>Start with one gem</h2><code class="wt-snippet">gem "omniauth-whop"</code>
-        <p class="wt-muted note">Works with OmniAuth and Devise. Includes PKCE and verified OpenID Connect identity tokens.</p></section>
+        <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop · Ruby</p>
+        <h1 class="wt-title">Sign in with Whop.</h1><p class="wt-lead">Real Whop login for any OmniAuth or Devise app.</p>
+        <div class="wt-actions">#{form('/auth/whop', 'Sign in with Whop', token)}#{SOURCE_BUTTON}</div></div>
+        <section class="wt-section"><h2>Install</h2><code class="wt-snippet">gem "omniauth-whop"</code>
+        <p class="wt-muted note">PKCE, verified OpenID Connect tokens, sandbox support.</p></section>
       HTML
     end
 
@@ -142,9 +142,9 @@ module WhopDemo
         "<div><dt>#{label}</dt><dd>#{CGI.escapeHTML(value.to_s.empty? ? 'Not provided' : value.to_s)}</dd></div>"
       end.join
       <<~HTML
-        <div class="wt-hero"><p class="wt-eyebrow"><span class="wt-badge wt-badge--success">Signed in successfully</span></p><h1 class="wt-title">You’re connected.</h1>
-        <p class="wt-lead">Your Whop identity was verified by OmniAuth.</p></div>
-        <section class="wt-section"><h2>Your profile</h2><dl class="profile">#{rows}</dl><div class="wt-actions">#{form('/logout', 'Sign out', token, primary: false)}</div></section>
+        <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop · Ruby <span class="wt-badge wt-badge--success">Signed in</span></p><h1 class="wt-title">You’re connected.</h1>
+        <p class="wt-lead">Verified by OmniAuth. Here’s what your app receives.</p></div>
+        <section class="wt-section"><h2>Profile</h2><dl class="profile">#{rows}</dl><div class="wt-actions">#{form('/logout', 'Sign out', token, primary: false)}</div></section>
       HTML
     end
   end

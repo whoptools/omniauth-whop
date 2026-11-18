@@ -66,6 +66,9 @@ RSpec.describe WhopDemo::App do
     expect(body).to include('<a href="https://omniauth.whoptools.com/" aria-current="page">')
     expect(body).to include('href="https://wf-checkout.whoptools.com/"', 'href="https://pay-rails.whoptools.com/"')
     expect(body).to include('href="https://x.com/yarotheslav" rel="author"', 'href="/assets/whoptools/whoptools.css?v=')
+    expect(body).to include('href="https://github.com/whoptools/omniauth-whop"><svg class="wt-github"')
+    expect(body).not_to match(%r{github\.com/whoptools/omniauth-whop#})
+    expect(body[body.index("<header")...body.index("</header>")]).not_to include("github")
     expect(body).to include('class="wt-button wt-button--solid" href="https://whop.com/start/?code=CAKARK" ' \
                             'rel="sponsored">Create a Whop account<')
   end

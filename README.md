@@ -172,7 +172,7 @@ Report bugs with a minimal reproduction, Ruby/gem versions, and the failure type
 
 ## Part of WhopTools
 
-Open-source Whop integrations that share one design and one home at [whoptools.com](https://whoptools.com):
+Open-source Whop integrations. More at [whoptools.com](https://whoptools.com).
 
 | Project | Live demo | Source |
 | --- | --- | --- |

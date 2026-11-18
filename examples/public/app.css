@@ -1,9 +1,7 @@
 /* OmniAuth demo content. Tokens, header, footer and buttons come from /assets/whoptools/whoptools.css. */
 .wt-section > h2 { margin-block-end: 1rem; }
-.steps { margin: 0; padding-inline-start: 1.5rem; color: var(--wt-muted); }
-.steps li + li { margin-block-start: .5rem; }
 .wt-snippet { inline-size: fit-content; }
-.note { margin-block-start: 1rem; }
+.note { margin-block-start: .75rem; }
 .profile { margin: 0; }
 .profile > div { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 1rem; padding-block: .75rem; border-block-end: 1px solid var(--wt-border); }
 dt { color: var(--wt-muted); }
