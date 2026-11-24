@@ -50,7 +50,7 @@ RSpec.describe WhopDemo::App do
   it "prevents caching, framing, and referrer leakage on profile responses" do
     headers = request("/")[1]
     expect(headers).to include("cache-control" => "no-store", "referrer-policy" => "no-referrer", "x-frame-options" => "DENY")
-    expect(headers.fetch("content-security-policy")).to include("frame-ancestors 'none'")
+    expect(headers.fetch("content-security-policy")).to include("frame-ancestors 'none'", "img-src 'self'")
   end
 
   it "shows a recoverable failure without reflecting provider errors" do
@@ -66,6 +66,7 @@ RSpec.describe WhopDemo::App do
     expect(body).to include('<a href="https://omniauth-ruby.whoptools.com/" aria-current="page">')
     expect(body).to include('href="https://wf-checkout.whoptools.com/"', 'href="https://pay-rails.whoptools.com/"')
     expect(body).to include('href="https://x.com/yarotheslav" rel="author"', 'href="/assets/whoptools/whoptools.css?v=')
+    expect(body).to include('<link rel="icon" href="/assets/whoptools/favicon.svg?v=')
     expect(body).to include('href="https://github.com/whoptools/omniauth-whop"><svg class="wt-github"')
     expect(body).not_to match(%r{github\.com/whoptools/omniauth-whop#})
     expect(body[body.index("<header")...body.index("</header>")]).not_to include("github")
