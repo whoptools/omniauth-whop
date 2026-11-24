@@ -16,7 +16,7 @@ module WhopDemo
       headers = headers.merge(
         "x-content-type-options" => "nosniff", "referrer-policy" => "no-referrer",
         "x-frame-options" => "DENY", "cache-control" => "no-store",
-        "content-security-policy" => "default-src 'none'; style-src 'self'; font-src 'self'; " \
+        "content-security-policy" => "default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; " \
                                      "base-uri 'none'; frame-ancestors 'none'; " \
                                      "form-action 'self' https://api.whop.com https://sandbox-api.whop.com " \
                                      "https://whop.com https://sandbox.whop.com"
@@ -56,6 +56,7 @@ module WhopDemo
       "/assets/#{path}?v=#{Digest::SHA256.file(File.expand_path("public/#{path}", __dir__)).hexdigest[0, 10]}"
     end
     KIT_CSS = ASSET.call("whoptools/whoptools.css")
+    FAVICON = ASSET.call("whoptools/favicon.svg")
     APP_CSS = ASSET.call("app.css")
     NOT_FOUND = <<~HTML
       <div class="wt-hero"><p class="wt-eyebrow">OmniAuth Whop · Ruby</p><h1 class="wt-title">Page not found.</h1>
@@ -104,7 +105,7 @@ module WhopDemo
       <<~HTML
         <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="color-scheme" content="light dark"><title>#{CGI.escapeHTML(title)}</title>
-        <link rel="stylesheet" href="#{KIT_CSS}"><link rel="stylesheet" href="#{APP_CSS}"></head>
+        <link rel="icon" href="#{FAVICON}" type="image/svg+xml"><link rel="stylesheet" href="#{KIT_CSS}"><link rel="stylesheet" href="#{APP_CSS}"></head>
         <body class="wt-body"><a class="wt-skip" href="#main">Skip to content</a>#{HEADER}
         <main id="main" class="wt-main"><div class="wt-container">#{content}</div></main>
         #{FOOTER}</body></html>
